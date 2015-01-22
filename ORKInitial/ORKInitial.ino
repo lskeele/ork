@@ -81,10 +81,43 @@ void setup() { // the word void means that this function won't return anything. 
     
     // You will be able to stream the sonar data over the serial terminal (found in tools on the Arduino IDE), by running Serial.println(yourVariable)
     Serial.begin(9600); 
-}
-    
-void loop() { // This is the main loop that will get run. This is where you should put all your magical super awesome avoidance algorithms.
 
+}
+
+long distance;
+int pos = 0;
+void loop() { // This is the main loop that will get run. This is where you should put all your magical super awesome avoidance algorithms.
+/*
+for(int i = 0; i < 150; i++){
+  sonicServo.write(i);
+  distance = readDistance();
+  Serial.println(distance);
+  delay(15);
+}
+for(int i = 150; i > 0; i--){
+  sonicServo.write(i);
+  distance = readDistance();
+  Serial.println(distance);
+  delay(15);
+}
+*/
+distance=readDistance();
+if(distance > pos){
+  pos = pos+1;
+  sonicServo.write(pos);
+  delay(15);
+}
+if(distance < pos){
+  pos = pos-1;
+  sonicServo.write(pos);
+  delay(15);
+}
+  
+
+
+
+
+/*
   int x = 1;
   int var;
   //var = readDistance();
@@ -101,6 +134,7 @@ void loop() { // This is the main loop that will get run. This is where you shou
 
     delay(100);
   }
+  */
 }
 
 void driveRobot(float lin, float rot){
@@ -138,7 +172,7 @@ long readDistance(void){
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
-  duration = pulseIn(echoPin, HIGH);
+  duration = pulseIn(echoPin, HIGH, 50000);
   distance = (duration/2) / 29.1;
   return distance;
 }
